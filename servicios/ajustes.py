@@ -7,7 +7,7 @@ IDIOMAS = {"Español": "es", "English": "en", "Français": "fr", "Português": "
 BROKER_POR_DEFECTO = "157.230.214.127"
 PREFIJO_POR_DEFECTO = "puerta_CAMBIAME"
 PUERTO_MQTT = 1883
-MODELO_GEMINI = "gemini-2.5-flash"  # si da error 404, cambia por un modelo disponible en Google AI Studio
+MODELO_GEMINI = "gemini-3.8-flash"  
 
 
 def _secreto(nombre: str, defecto: str = "") -> str:
