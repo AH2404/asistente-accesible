@@ -62,7 +62,7 @@ def ejecutar(accion: str, origen: str) -> None:
 
 def procesar_voz(datos: bytes) -> None:
     if not ss.get("api_key"):
-        ss["respuesta_puerta"] = ("error", "Falta la API key de OpenAI en la barra lateral.")
+        ss["respuesta_puerta"] = ("error", "Falta la API key de Gemini en la barra lateral.")
         return
     try:
         with st.spinner("Escuchando..."):

@@ -26,7 +26,7 @@ with tab_imagen:
 
     if st.button("Describir imagen", type="primary", disabled=imagen is None):
         if not ss.get("api_key"):
-            st.warning("Falta la API key de OpenAI en la barra lateral.")
+            st.warning("Falta la API key de Gemini en la barra lateral.")
         else:
             try:
                 with st.spinner("Analizando la imagen..."):

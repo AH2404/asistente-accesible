@@ -7,6 +7,7 @@ IDIOMAS = {"Español": "es", "English": "en", "Français": "fr", "Português": "
 BROKER_POR_DEFECTO = "157.230.214.127"
 PREFIJO_POR_DEFECTO = "puerta_CAMBIAME"
 PUERTO_MQTT = 1883
+MODELO_GEMINI = "gemini-2.5-flash"  # si da error 404, cambia por un modelo disponible en Google AI Studio
 
 
 def _secreto(nombre: str, defecto: str = "") -> str:
@@ -26,11 +27,11 @@ def barra_lateral() -> None:
         st.session_state["idioma"] = IDIOMAS[nombre]
         st.toggle("🔊 Responder también con voz", value=True, key="voz_activa")
 
-        clave = _secreto("OPENAI_API_KEY")
+        clave = _secreto("GEMINI_API_KEY")
         if clave:
             st.caption("🔑 API key cargada desde secrets")
         else:
-            clave = st.text_input("OpenAI API Key", type="password", key="clave_manual")
+            clave = st.text_input("Gemini API Key", type="password", key="clave_manual")
         st.session_state["api_key"] = clave
 
         with st.expander("Conexión de la puerta (MQTT)"):

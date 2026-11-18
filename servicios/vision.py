@@ -1,7 +1,8 @@
-"""Descripción de imágenes con un modelo de visión."""
-import base64
+"""Descripción de imágenes con Gemini."""
+from google import genai
+from google.genai import types
 
-from openai import OpenAI
+from servicios.ajustes import MODELO_GEMINI
 
 IDIOMA_NOMBRES = {"es": "español", "en": "inglés", "fr": "francés", "pt": "portugués"}
 
@@ -20,19 +21,13 @@ ESTILOS = {
 
 
 def describir_imagen(api_key: str, imagen: bytes, mime: str, estilo: str, idioma: str) -> str:
-    b64 = base64.b64encode(imagen).decode("utf-8")
     nombre_idioma = IDIOMA_NOMBRES.get(idioma, "español")
-    respuesta = OpenAI(api_key=api_key).chat.completions.create(
-        model="gpt-4o-mini",
-        max_tokens=500,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": f"{ESTILOS[estilo]} Responde en {nombre_idioma}."},
-                    {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}},
-                ],
-            }
+    client = genai.Client(api_key=api_key)
+    respuesta = client.models.generate_content(
+        model=MODELO_GEMINI,
+        contents=[
+            types.Part.from_bytes(data=imagen, mime_type=mime),
+            f"{ESTILOS[estilo]} Responde en {nombre_idioma}.",
         ],
     )
-    return respuesta.choices[0].message.content
+    return (respuesta.text or "").strip()

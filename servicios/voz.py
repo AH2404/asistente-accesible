@@ -1,11 +1,14 @@
-"""Voz: texto a voz (gTTS), voz a texto (Whisper) e interpretación de órdenes."""
+"""Voz: texto a voz (gTTS), voz a texto (Gemini) e interpretación de órdenes."""
 import io
 import re
 import unicodedata
 
 import streamlit as st
 from gtts import gTTS
-from openai import OpenAI
+from google import genai
+from google.genai import types
+
+from servicios.ajustes import MODELO_GEMINI
 
 MAX_CARACTERES = 5000
 
@@ -31,12 +34,17 @@ def hablar(texto, forzar=False, autoplay=True, lento=False, idioma=None) -> None
 
 
 def audio_a_texto(audio_bytes: bytes, api_key: str, idioma: str = "es") -> str:
-    """Transcribe audio con Whisper."""
-    client = OpenAI(api_key=api_key)
-    respuesta = client.audio.transcriptions.create(
-        model="whisper-1", file=("orden.wav", audio_bytes), language=idioma
+    """Transcribe audio con Gemini."""
+    client = genai.Client(api_key=api_key)
+    respuesta = client.models.generate_content(
+        model=MODELO_GEMINI,
+        contents=[
+            types.Part.from_bytes(data=audio_bytes, mime_type="audio/wav"),
+            "Transcribe exactamente lo que se dice en este audio (idioma: "
+            f"{idioma}). Responde solo con la transcripción, sin comentarios.",
+        ],
     )
-    return respuesta.text.strip()
+    return (respuesta.text or "").strip()
 
 
 ABRIR = {"abre", "abrir", "abras", "abra", "abrime"}
